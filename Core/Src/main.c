@@ -56,16 +56,47 @@ uint16_t readADC;
 float readADC_f;
 const float resolutionADC = 4095.0 / 4.095;
 
-uint16_t user_btn = 0;
 uint16_t duty;
 
+//USART
 char msg_str[3];
 uint8_t msg_len = 3;
 uint16_t size = 0;
+
+//Regulator
 int u;
+float Kp = 2;
+float Ki = 4;
+float Kd = 0;
+float dt = 0.001;
+int previous_error = 0;
+int previous_integral = 0;
+int integral;
+int derivative;
+int total_error = 0;
+float p_term, i_term, d_term;
+int PID = 300;
+int error;
+int B;
+
+//Input Capture
+#define TIMCLOCK   72000000
+#define PRESCALAR  72
+uint32_t IC_Val1 = 0;
+uint32_t IC_Val2 = 0;
+uint32_t Difference = 0;
+int Is_First_Captured = 0;
+float frequency = 0;
+
+//Encoder
+int16_t temp_counter;
 int counter_usart = 0;
 uint16_t counter;
 _Bool flag = 0;
+
+//LCD
+struct lcd_disp disp;
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3)
@@ -77,49 +108,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-
-if(GPIO_Pin == USER_Btn_Pin)
-{
- user_btn += 1;
-}
-}
-
-float Kp = 1;
-float Ki = 2.78;
-float Kd = 0;
-float dt = 0.1;
-int previous_error = 0;
-int previous_integral = 0;
-int integral;
-int derivative;
-int total_error = 0;
-float p_term, i_term, d_term;
-int PID = 300;
-int error;
-int B;
-
-
-
-
-#define TIMCLOCK   72000000
-#define PRESCALAR  72
-
-uint32_t IC_Val1 = 0;
-uint32_t IC_Val2 = 0;
-uint32_t Difference = 0;
-int Is_First_Captured = 0;
-
-
-
-/* Measure Frequency */
-float frequency = 0;
-//uint32_t counter;
-
 // INPUT CAPTURE FUNCTION
-
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
@@ -152,18 +141,13 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			float refClock = TIMCLOCK/(PRESCALAR);
 
 			frequency = refClock/(Difference*2);
-//			}
+
 			__HAL_TIM_SET_COUNTER(htim, 0);  // reset the counter
 			Is_First_Captured = 0; // set it back to false
 
 
 		}
 	}
-
-//	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
-//		{
-//			counter = __HAL_TIM_GET_COUNTER(&htim3);
-//		}
 
 	  if(PID == 0)
 	  {
@@ -172,33 +156,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 }
 
 
-// ENCODER
-
-int8_t count_normalized;
-
-
-void UpdateCounter(void)
-{
-	static uint16_t LastTimerCounter = 0;
-	int TimerDif = htim3.Instance->CNT - LastTimerCounter;
-	if(TimerDif >= 4 || TimerDif <= -4)
-	{
-		TimerDif /= 0.8;
-		count_normalized += (int8_t)TimerDif;
-		if(count_normalized > 100) count_normalized = 100;
-		if(count_normalized < 0) count_normalized = 0;
-		LastTimerCounter = htim3.Instance->CNT;
-		counter = (uint16_t)count_normalized;
-	}
-}
-// UART
-void send_string(char* s)
-{
-	HAL_UART_Transmit(&huart3, (uint8_t*)s, strlen(s), 100);
-
-}
-
-int16_t temp_counter;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM1)
@@ -244,9 +201,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   			  PID =0;
   		  }
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, PID);
-
-//  		UART
-
 
   }
 }
@@ -312,9 +266,6 @@ int main(void)
 
 
   // LCD init
-  struct lcd_disp disp;
-
-
   disp.addr = (0x27 << 1);
   disp.bl = true;
   lcd_init(&disp);
@@ -324,15 +275,12 @@ int main(void)
 
   lcd_display(&disp);
 
-
-//  uint16_t PWM = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  counter = __HAL_TIM_GET_COUNTER(&htim3);
 // odczyt z ADC
 
 	  HAL_ADC_Start(&hadc1);
@@ -345,26 +293,7 @@ int main(void)
 		 sprintf((char *)&disp.f_line, "var: %d", counter);
 		 lcd_display(&disp);
 		 HAL_Delay(500);
-//		 UpdateCounter();
-//		 HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
-
-
-
-
-
-	  // zmiana PWM
-
-//	  if( PWM < 1000)
-//	  {
-//	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, PWM);
-//		PWM += 100;
-//	  }
-//	  else
-//	  {
-//		  PWM = 0;
-//	  }
-//	  HAL_Delay(3000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
