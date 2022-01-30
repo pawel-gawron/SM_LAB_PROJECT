@@ -31,6 +31,8 @@
 #include "lcd_i2c.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,14 +59,21 @@ const float resolutionADC = 4095.0 / 4.095;
 uint16_t user_btn = 0;
 uint16_t duty;
 
-char msg_str[];
-uint16_t msg_len = 20;
+char msg_str[3];
+uint8_t msg_len = 3;
+uint16_t size = 0;
+int u;
+int counter_usart = 0;
+uint16_t counter;
+_Bool flag = 0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3)
 	{
-		HAL_UART_Transmit(&huart3, (uint8_t*)msg_str, msg_len, 100 /* ms */);
 		HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
+		HAL_UART_Transmit_IT(&huart3, (uint8_t*)msg_str, msg_len);
+		counter_usart = atoi(msg_str);
+		flag = 1;
 	}
 }
 
@@ -88,7 +97,6 @@ int derivative;
 int total_error = 0;
 float p_term, i_term, d_term;
 int PID = 300;
-int u;
 int error;
 int B;
 
@@ -151,6 +159,12 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
 		}
 	}
+
+//	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+//		{
+//			counter = __HAL_TIM_GET_COUNTER(&htim3);
+//		}
+
 	  if(PID == 0)
 	  {
 		  frequency = 0;
@@ -161,7 +175,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 // ENCODER
 
 int8_t count_normalized;
-uint16_t counter;
 
 
 void UpdateCounter(void)
@@ -185,6 +198,7 @@ void send_string(char* s)
 
 }
 
+int16_t temp_counter;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM1)
@@ -192,7 +206,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //	 __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)(readADC_f));
 
 
-  		  u = counter;
+	  	  counter = __HAL_TIM_GET_COUNTER(&htim3);
+
+	  	  if (flag == 1)
+	  	  {
+	  		u = counter_usart;
+	  	  }
+	  	  if (temp_counter != counter) {
+			flag = 0;
+			u = counter;
+		}
+
+
+	  	  temp_counter = __HAL_TIM_GET_COUNTER(&htim3);
 
 
   		  error = u - frequency;
@@ -277,9 +303,12 @@ int main(void)
 
 // Input Capture
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
 
 //  Encoder
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+//USART
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
 
   // LCD init
@@ -295,8 +324,6 @@ int main(void)
 
   lcd_display(&disp);
 
-
-//  HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
 //  uint16_t PWM = 0;
   /* USER CODE END 2 */
@@ -318,8 +345,8 @@ int main(void)
 		 sprintf((char *)&disp.f_line, "var: %d", counter);
 		 lcd_display(&disp);
 		 HAL_Delay(500);
-		 UpdateCounter();
-		 HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
+//		 UpdateCounter();
+//		 HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
 
 
