@@ -72,19 +72,21 @@ uint16_t size = 0;
 
 //Regulator
 int u;
-float Kp = 2;
-float Ki = 4;
-float Kd = 0;
-float dt = 0.001;
-int previous_error = 0;
-int previous_integral = 0;
-int integral;
-int derivative;
-int total_error = 0;
-float p_term, i_term, d_term;
-int PID = 300;
-int error;
+//float Kp = 2;
+//float Ki = 4;
+//float Kd = 0;
+//float dt = 0.001;
+//int previous_error = 0;
+//int previous_integral = 0;
+//int integral;
+//int derivative;
+//int total_error = 0;
+//float p_term, i_term, d_term;
+//int PID = 300;
+//int error;
 int output;
+
+pid_str pid_controller;
 
 //Input Capture
 #define TIMCLOCK   72000000
@@ -101,7 +103,6 @@ int counter_usart = 0;
 uint16_t counter;
 _Bool flag = 0;
 
-pid_str pid_controller;
 
 //LCD
 struct lcd_disp disp;
@@ -188,28 +189,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	  	output = pid_calculate(&(pid_controller), u, frequency);
 
-  		  error = u - frequency;
-
-  		  p_term = (float)(Kp * error);
-
-  		  integral = previous_integral + (error+previous_error);
-  		  previous_integral = integral;
-  		  i_term = Ki*integral*(dt/2);
-
-  		  derivative = (error - previous_error)/dt;
-  		  previous_error = error;
-  		  d_term = Kd*derivative;
-
-  		  PID = (uint16_t)(p_term + i_term + d_term);
-
-  		  if (PID > 1000)
-  		  {
-  			  PID = 1000;
-  		  }
-  		  else if(PID < 0)
-  		  {
-  			  PID =0;
-  		  }
+//  		  error = u - frequency;
+//
+//  		  p_term = (float)(Kp * error);
+//
+//  		  integral = previous_integral + (error+previous_error);
+//  		  previous_integral = integral;
+//  		  i_term = Ki*integral*(dt/2);
+//
+//  		  derivative = (error - previous_error)/dt;
+//  		  previous_error = error;
+//  		  d_term = Kd*derivative;
+//
+//  		  PID = (uint16_t)(p_term + i_term + d_term);
+//
+//  		  if (PID > 1000)
+//  		  {
+//  			  PID = 1000;
+//  		  }
+//  		  else if(PID < 0)
+//  		  {
+//  			  PID =0;
+//  		  }
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
   }
