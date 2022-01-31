@@ -29,10 +29,12 @@
 /* USER CODE BEGIN Includes */
 // LCD
 #include "lcd_i2c.h"
+#include "PID_controller.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,6 +44,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FAN_Kp					10
+#define FAN_Ki					4
+#define FAN_Kd					0
+#define FAN_dt					0.001
+#define FAN_ANTI_WINDUP			25
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -77,7 +84,7 @@ int total_error = 0;
 float p_term, i_term, d_term;
 int PID = 300;
 int error;
-int B;
+int output;
 
 //Input Capture
 #define TIMCLOCK   72000000
@@ -93,6 +100,8 @@ int16_t temp_counter;
 int counter_usart = 0;
 uint16_t counter;
 _Bool flag = 0;
+
+pid_str pid_controller;
 
 //LCD
 struct lcd_disp disp;
@@ -149,7 +158,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 		}
 	}
 
-	  if(PID == 0)
+	  if(output == 0)
 	  {
 		  frequency = 0;
 	  }
@@ -177,6 +186,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	  	  temp_counter = __HAL_TIM_GET_COUNTER(&htim3);
 
+	  	output = pid_calculate(&(pid_controller), u, frequency);
 
   		  error = u - frequency;
 
@@ -200,7 +210,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   		  {
   			  PID =0;
   		  }
-  		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, PID);
+  		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
   }
 }
@@ -254,6 +264,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
+//PID
+  pid_init(&(pid_controller), FAN_Kp, FAN_Ki, FAN_Kd, FAN_dt, FAN_ANTI_WINDUP);
 
 // Input Capture
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
