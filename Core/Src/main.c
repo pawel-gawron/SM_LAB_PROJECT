@@ -44,11 +44,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FAN_Kp					10
-#define FAN_Ki					4
+#define FAN_Kp					20
+#define FAN_Ki					8
 #define FAN_Kd					0
 #define FAN_dt					0.001
-#define FAN_ANTI_WINDUP			25
+#define FAN_ANTI_WINDUP			800
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,21 +69,11 @@ uint16_t duty;
 char msg_str[3];
 uint8_t msg_len = 3;
 uint16_t size = 0;
+char data_msg[62];
+uint8_t n = 62;
 
 //Regulator
 int u;
-//float Kp = 2;
-//float Ki = 4;
-//float Kd = 0;
-//float dt = 0.001;
-//int previous_error = 0;
-//int previous_integral = 0;
-//int integral;
-//int derivative;
-//int total_error = 0;
-//float p_term, i_term, d_term;
-//int PID = 300;
-//int error;
 int output;
 
 pid_str pid_controller;
@@ -102,7 +92,6 @@ int16_t temp_counter;
 int counter_usart = 0;
 uint16_t counter;
 _Bool flag = 0;
-
 
 //LCD
 struct lcd_disp disp;
@@ -178,41 +167,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  	  if (flag == 1)
 	  	  {
 	  		u = counter_usart;
+	  		counter = counter_usart;
 	  	  }
 	  	  if (temp_counter != counter) {
 			flag = 0;
 			u = counter;
 		}
 
-
-	  	  temp_counter = __HAL_TIM_GET_COUNTER(&htim3);
+	  	temp_counter = __HAL_TIM_GET_COUNTER(&htim3);
 
 	  	output = pid_calculate(&(pid_controller), u, frequency);
-
-//  		  error = u - frequency;
-//
-//  		  p_term = (float)(Kp * error);
-//
-//  		  integral = previous_integral + (error+previous_error);
-//  		  previous_integral = integral;
-//  		  i_term = Ki*integral*(dt/2);
-//
-//  		  derivative = (error - previous_error)/dt;
-//  		  previous_error = error;
-//  		  d_term = Kd*derivative;
-//
-//  		  PID = (uint16_t)(p_term + i_term + d_term);
-//
-//  		  if (PID > 1000)
-//  		  {
-//  			  PID = 1000;
-//  		  }
-//  		  else if(PID < 0)
-//  		  {
-//  			  PID =0;
-//  		  }
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
+//
+  		n = sprintf(data_msg, "Sterowanie: %6d Predkosc: %6d Wartosc zadana: %6d\r", (int)output, (int)frequency, (int)u);
+  		HAL_UART_Transmit_IT(&huart3, (uint8_t*)data_msg, n);
   }
 }
 /* USER CODE END PV */
@@ -297,16 +266,16 @@ int main(void)
   {
 // odczyt z ADC
 
-	  HAL_ADC_Start(&hadc1);
-		 if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK)
-		 {
-			readADC = HAL_ADC_GetValue(&hadc1);
-			readADC_f = readADC / 4.095;
-		 }
-
-		 sprintf((char *)&disp.f_line, "var: %d", counter);
-		 lcd_display(&disp);
-		 HAL_Delay(500);
+//	  HAL_ADC_Start(&hadc1);
+//		 if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK)
+//		 {
+//			readADC = HAL_ADC_GetValue(&hadc1);
+//			readADC_f = readADC / 4.095;
+//		 }
+//
+//		 sprintf((char *)&disp.f_line, "var: %d", counter);
+//		 lcd_display(&disp);
+//		 HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
