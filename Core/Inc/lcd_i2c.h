@@ -23,6 +23,7 @@
 #ifndef INC_LCD_I2C_H_
 #define INC_LCD_I2C_H_
 
+/* Includes ------------------------------------------------------------------*/
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -34,6 +35,7 @@
  *
  * */
 
+/* Typedef -------------------------------------------------------------------*/
 #define HI2C_DEF hi2c1
 
 #define RS_PIN 0x01
@@ -61,6 +63,7 @@ struct lcd_disp {
 	bool bl;
 };
 
+/* Public function prototypes ------------------------------------------------*/
 void lcd_init(struct lcd_disp * lcd);
 void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin);
 void lcd_display(struct lcd_disp * lcd);

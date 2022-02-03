@@ -96,6 +96,11 @@ _Bool flag = 0;
 //LCD
 struct lcd_disp disp;
 
+/**
+  * @brief  Rx Transfer completed callback.
+  * @param  huart UART handle.
+  * @retval None
+  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3)
@@ -108,6 +113,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 // INPUT CAPTURE FUNCTION
+/**
+  * @brief  Period elapsed callback in input capture mode
+  * @param  htim TIM handle
+  * @retval None
+  */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
@@ -154,7 +164,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 	  }
 }
 
-
+/**
+  * @brief  Period elapsed callback in non-blocking mode
+  * @param  htim TIM handle
+  * @retval None
+  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM1)
@@ -236,16 +250,16 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
 
-//PID
+//PID initialize
   pid_init(&(pid_controller), FAN_Kp, FAN_Ki, FAN_Kd, FAN_dt, FAN_ANTI_WINDUP);
 
-// Input Capture
+// Input Capture initialize
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
 
-//  Encoder
+//  Encoder initialize
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-//USART
+//USART receive
   HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
 

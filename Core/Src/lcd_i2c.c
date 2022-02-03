@@ -21,12 +21,13 @@
  * SOFTWARE.
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include "lcd_i2c.h"
 #include "stm32f746xx.h"
 #include "i2c.h"
 
 
-
+/* Public function prototypes ------------------------------------------------*/
 void lcd_init(struct lcd_disp * lcd)
 {
 	uint8_t xpin = 0;
