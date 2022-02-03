@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "i2c.h"
 #include "tim.h"
 #include "usart.h"
@@ -88,10 +87,8 @@ int Is_First_Captured = 0;
 float frequency = 0;
 
 //Encoder
-int16_t temp_counter;
 int counter_usart = 0;
 uint16_t counter;
-_Bool flag = 0;
 
 //LCD
 struct lcd_disp disp;
@@ -108,7 +105,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 		HAL_UART_Transmit_IT(&huart3, (uint8_t*)msg_str, msg_len);
 		counter_usart = atoi(msg_str);
-		flag = 1;
+		__HAL_TIM_SET_COUNTER(&htim3, counter_usart);
 	}
 }
 
@@ -173,28 +170,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM1)
   {
-//	 __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)(readADC_f));
 
+	  	counter = __HAL_TIM_GET_COUNTER(&htim3);
 
-	  	  counter = __HAL_TIM_GET_COUNTER(&htim3);
-
-	  	  if (flag == 1)
-	  	  {
-	  		u = counter_usart;
-	  		counter = counter_usart;
-	  	  }
-	  	  if (temp_counter != counter) {
-			flag = 0;
-			u = counter;
-		}
-
-	  	temp_counter = __HAL_TIM_GET_COUNTER(&htim3);
+	  	u = counter;
 
 	  	output = pid_calculate(&(pid_controller), u, frequency);
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
 //
-  		n = sprintf(data_msg, " U:%4d, V:%.2f, Y:%4d,\r\n", (int)output, frequency, (int)u);
+  		n = sprintf(data_msg, " U: %4d, V: %.2f, Y: %4d,\r\n", (int)output, frequency, (int)u);
 //  		n = sprintf(data_msg, "%.2f\r\n", (int)output, frequency, (int)u);
   		HAL_UART_Transmit_IT(&huart3, (uint8_t*)data_msg, n);
   }
@@ -241,7 +226,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM1_Init();
-  MX_ADC1_Init();
   MX_TIM2_Init();
   MX_I2C1_Init();
   MX_TIM3_Init();
@@ -272,9 +256,6 @@ int main(void)
   sprintf((char *)&disp.s_line, "################");
 
   lcd_display(&disp);
-//  frequency = 0;
-//  HAL_Delay(2000);
-
 
   /* USER CODE END 2 */
 
@@ -282,19 +263,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-// odczyt z ADC
-
-//	  HAL_ADC_Start(&hadc1);
-//		 if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK)
-//		 {
-//			readADC = HAL_ADC_GetValue(&hadc1);
-//			readADC_f = readADC / 4.095;
-//		 }
-//
-//		 sprintf((char *)&disp.f_line, "var: %d", counter);
-//		 lcd_display(&disp);
-
-//		 __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 2000);
 
     /* USER CODE END WHILE */
 

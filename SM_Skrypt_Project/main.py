@@ -19,7 +19,7 @@ def plot_data():
     global cond, data
     if(cond == True):
 
-        s = serial.Serial(port='COM7', baudrate = 9600)
+        # s = serial.Serial(port='COM7', baudrate=9600)
 
         # s.write(b'050')
 
@@ -29,7 +29,7 @@ def plot_data():
         s.reset_input_buffer()
 
         try:
-            a_int = [int(x[-4:]) for x in a[:-3].split(',')]
+            a_int = [float(x[-5:]) for x in a[:-3].split(',')]
             print(a)
             print(a_int)
 
@@ -61,7 +61,7 @@ def plot_start():
 def plot_stop():
     global cond
     cond = False
-    print('STOP PRESSED, ', 'cond = ', cond)
+    # print('STOP PRESSED, ', 'cond = ', cond)
 '''main GUI code'''
 root = tk.Tk()
 root.title('Real time plot')
