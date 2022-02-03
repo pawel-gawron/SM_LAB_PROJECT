@@ -44,11 +44,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FAN_Kp					20
-#define FAN_Ki					20
+#define FAN_Kp					0.38101
+#define FAN_Ki					8.4524
 #define FAN_Kd					0
 #define FAN_dt					0.001
-#define FAN_ANTI_WINDUP			800
+#define FAN_ANTI_WINDUP			1000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -180,7 +180,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
 //
-  		n = sprintf(data_msg, " U:%4d, V:%4d, Y:%4d,\r\n", (int)output, (int)frequency, (int)u);
+//  		n = sprintf(data_msg, " U:%4d, V:%.2f, Y:%4d,\r\n", (int)output, frequency, (int)u);
+  		n = sprintf(data_msg, "%.2f\r\n", (int)output, frequency, (int)u);
   		HAL_UART_Transmit_IT(&huart3, (uint8_t*)data_msg, n);
   }
 }
@@ -257,6 +258,9 @@ int main(void)
   sprintf((char *)&disp.s_line, "################");
 
   lcd_display(&disp);
+//  frequency = 0;
+//  HAL_Delay(2000);
+
 
   /* USER CODE END 2 */
 
@@ -275,7 +279,8 @@ int main(void)
 //
 //		 sprintf((char *)&disp.f_line, "var: %d", counter);
 //		 lcd_display(&disp);
-//		 HAL_Delay(500);
+
+//		 __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 2000);
 
     /* USER CODE END WHILE */
 
