@@ -21,17 +21,14 @@
  * SOFTWARE.
  */
 
-/* Includes ------------------------------------------------------------------*/
-#include "lcd_i2c.h"
-#include "stm32f746xx.h"
 #include "i2c.h"
 
 
 /* Public function prototypes ------------------------------------------------*/
 
 /**
- * @brief Initialisation PID controller
- * @param[in] pid_data PID handler
+ * @brief Initialisation LCD
+ * @param[in] lcd_disp handler
  * @return None
  */
 void lcd_init(struct lcd_disp * lcd)
@@ -63,10 +60,10 @@ void lcd_init(struct lcd_disp * lcd)
 }
 
 /**
- * @brief Initialisation PID controller
- * @param[in] pid_data PID handler
- * @param[in] kp_init Proportional value
- * @param[in] ki_init Integral value
+ * @brief Writes to display
+ * @param[in] addr
+ * @param[in] data
+ * @param[in] xpin
  * @return None
  */
 void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin)
@@ -86,8 +83,8 @@ void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin)
 }
 
 /**
- * @brief Initialisation PID controller
- * @param[in] pid_data PID handler
+ * @brief Displays data stored in disp struct
+ * @param[in] lcd_disp handle
  * @return None
  */
 void lcd_display(struct lcd_disp * lcd)
@@ -100,7 +97,7 @@ void lcd_display(struct lcd_disp * lcd)
 		xpin = BL_PIN;
 	}
 
-	lcd_clear(lcd);
+//	lcd_clear(lcd);
 
 	/* send first line data */
 	lcd_write(lcd->addr, FIRST_CHAR_LINE_1, xpin);
@@ -121,8 +118,8 @@ void lcd_display(struct lcd_disp * lcd)
 }
 
 /**
- * @brief Initialisation PID controller
- * @param[in] pid_data PID handler
+ * @brief clears data stored in disp struct
+ * @param[in] lcd_disp handle
  * @return None
  */
 void lcd_clear(struct lcd_disp * lcd)

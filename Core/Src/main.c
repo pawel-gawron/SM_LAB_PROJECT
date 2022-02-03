@@ -93,6 +93,9 @@ uint16_t counter;
 //LCD
 struct lcd_disp disp;
 
+
+
+
 /**
   * @brief  Rx Transfer completed callback.
   * @param  huart UART handle.
@@ -246,16 +249,18 @@ int main(void)
 //USART receive
   HAL_UART_Receive_IT(&huart3, (uint8_t*)msg_str, msg_len);
 
-
   // LCD init
+
   disp.addr = (0x27 << 1);
   disp.bl = true;
+
   lcd_init(&disp);
 
-  sprintf((char *)&disp.f_line, "################");
-  sprintf((char *)&disp.s_line, "################");
 
-  lcd_display(&disp);
+
+
+
+
 
   /* USER CODE END 2 */
 
@@ -264,6 +269,10 @@ int main(void)
   while (1)
   {
 
+	  sprintf((char *)&disp.f_line, "Set Point: %d  ", counter);
+	  sprintf((char *)&disp.s_line, "Speed: %.2f  ", frequency);
+	  lcd_display(&disp);
+	  HAL_Delay(20);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

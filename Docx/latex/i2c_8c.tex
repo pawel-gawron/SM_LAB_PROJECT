@@ -1,0 +1,57 @@
+\hypertarget{i2c_8c}{}\doxysection{Src/i2c.c File Reference}
+\label{i2c_8c}\index{Src/i2c.c@{Src/i2c.c}}
+
+
+This file provides code for the configuration of the I2C instances.  
+
+
+{\ttfamily \#include \char`\"{}i2c.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{i2c_8c_ada6e763cfa4108a8d24cd27b75f2f489}{MX\+\_\+\+I2\+C1\+\_\+\+Init}} (void)
+\item 
+void \mbox{\hyperlink{i2c_8c_a08b1eb7b7be5b94395127e2a33b1b67e}{HAL\+\_\+\+I2\+C\+\_\+\+Msp\+Init}} (I2\+C\+\_\+\+Handle\+Type\+Def $\ast$i2c\+Handle)
+\item 
+void \mbox{\hyperlink{i2c_8c_adaa17249f3d5001ad363c736df31c593}{HAL\+\_\+\+I2\+C\+\_\+\+Msp\+De\+Init}} (I2\+C\+\_\+\+Handle\+Type\+Def $\ast$i2c\+Handle)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{i2c_8c_af7b2c26e44dadaaa798a5c3d82914ba7}\label{i2c_8c_af7b2c26e44dadaaa798a5c3d82914ba7}} 
+I2\+C\+\_\+\+Handle\+Type\+Def {\bfseries hi2c1}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file provides code for the configuration of the I2C instances. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\doxysubsubsection*{\begin{center}\copyright{} Copyright (c) 2022 STMicroelectronics. All rights reserved.\end{center} }
+
+This software component is licensed by ST under BSD 3-\/Clause license, the \char`\"{}\+License\char`\"{}; You may not use this file except in compliance with the License. You may obtain a copy of the License at\+: opensource.\+org/licenses/\+BSD-\/3-\/\+Clause 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{i2c_8c_adaa17249f3d5001ad363c736df31c593}\label{i2c_8c_adaa17249f3d5001ad363c736df31c593}} 
+\index{i2c.c@{i2c.c}!HAL\_I2C\_MspDeInit@{HAL\_I2C\_MspDeInit}}
+\index{HAL\_I2C\_MspDeInit@{HAL\_I2C\_MspDeInit}!i2c.c@{i2c.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_I2C\_MspDeInit()}{HAL\_I2C\_MspDeInit()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+I2\+C\+\_\+\+Msp\+De\+Init (\begin{DoxyParamCaption}\item[{I2\+C\+\_\+\+Handle\+Type\+Def $\ast$}]{i2c\+Handle }\end{DoxyParamCaption})}
+
+I2\+C1 GPIO Configuration PB6 -\/-\/-\/---\texorpdfstring{$>$}{>} I2\+C1\+\_\+\+SCL PB9 -\/-\/-\/---\texorpdfstring{$>$}{>} I2\+C1\+\_\+\+SDA\mbox{\Hypertarget{i2c_8c_a08b1eb7b7be5b94395127e2a33b1b67e}\label{i2c_8c_a08b1eb7b7be5b94395127e2a33b1b67e}} 
+\index{i2c.c@{i2c.c}!HAL\_I2C\_MspInit@{HAL\_I2C\_MspInit}}
+\index{HAL\_I2C\_MspInit@{HAL\_I2C\_MspInit}!i2c.c@{i2c.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_I2C\_MspInit()}{HAL\_I2C\_MspInit()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+I2\+C\+\_\+\+Msp\+Init (\begin{DoxyParamCaption}\item[{I2\+C\+\_\+\+Handle\+Type\+Def $\ast$}]{i2c\+Handle }\end{DoxyParamCaption})}
+
+I2\+C1 GPIO Configuration PB6 -\/-\/-\/---\texorpdfstring{$>$}{>} I2\+C1\+\_\+\+SCL PB9 -\/-\/-\/---\texorpdfstring{$>$}{>} I2\+C1\+\_\+\+SDA\mbox{\Hypertarget{i2c_8c_ada6e763cfa4108a8d24cd27b75f2f489}\label{i2c_8c_ada6e763cfa4108a8d24cd27b75f2f489}} 
+\index{i2c.c@{i2c.c}!MX\_I2C1\_Init@{MX\_I2C1\_Init}}
+\index{MX\_I2C1\_Init@{MX\_I2C1\_Init}!i2c.c@{i2c.c}}
+\doxysubsubsection{\texorpdfstring{MX\_I2C1\_Init()}{MX\_I2C1\_Init()}}
+{\footnotesize\ttfamily void MX\+\_\+\+I2\+C1\+\_\+\+Init (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Configure Analogue filter
+
+Configure Digital filter
