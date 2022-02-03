@@ -19,7 +19,7 @@ def plot_data():
     global cond, data
     if(cond == True):
 
-        # s = serial.Serial("/dev/cu.usbmodem1412203", baudrate = 9600)
+        s = serial.Serial(port='COM7', baudrate = 9600)
 
         # s.write(b'050')
 
@@ -100,7 +100,7 @@ stop.place(x=400, y = 450)
 
 '''Serial port'''
 # global s
-s = serial.Serial("/dev/cu.usbmodem1412203", baudrate=9600)
+s = serial.Serial(port='COM7', baudrate = 9600)
 # s.reset_input_buffer()
 # s.write(b'050')
 
