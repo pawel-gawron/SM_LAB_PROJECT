@@ -180,8 +180,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
 //
-//  		n = sprintf(data_msg, " U:%4d, V:%.2f, Y:%4d,\r\n", (int)output, frequency, (int)u);
-  		n = sprintf(data_msg, "%.2f\r\n", (int)output, frequency, (int)u);
+  		n = sprintf(data_msg, " U:%4d, V:%.2f, Y:%4d,\r\n", (int)output, frequency, (int)u);
+//  		n = sprintf(data_msg, "%.2f\r\n", (int)output, frequency, (int)u);
   		HAL_UART_Transmit_IT(&huart3, (uint8_t*)data_msg, n);
   }
 }
