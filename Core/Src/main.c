@@ -45,7 +45,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define FAN_Kp					20
-#define FAN_Ki					8
+#define FAN_Ki					20
 #define FAN_Kd					0
 #define FAN_dt					0.001
 #define FAN_ANTI_WINDUP			800
@@ -180,7 +180,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, output);
 
 //
-  		n = sprintf(data_msg, "Sterowanie: %6d Predkosc: %6d Wartosc zadana: %6d\r", (int)output, (int)frequency, (int)u);
+  		n = sprintf(data_msg, " U:%4d, V:%4d, Y:%4d,\r\n", (int)output, (int)frequency, (int)u);
   		HAL_UART_Transmit_IT(&huart3, (uint8_t*)data_msg, n);
   }
 }

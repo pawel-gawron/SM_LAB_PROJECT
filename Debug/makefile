@@ -61,8 +61,8 @@ all: main-build
 main-build: SM_LAB_PROJECT.elf secondary-outputs
 
 # Tool invocations
-SM_LAB_PROJECT.elf: $(OBJS) $(USER_OBJS) C:\Users\Pawel\STM32CubeIDE\workspace_1.7.0\SM_LAB_PROJECT\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SM_LAB_PROJECT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Pawel\STM32CubeIDE\workspace_1.7.0\SM_LAB_PROJECT\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SM_LAB_PROJECT.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SM_LAB_PROJECT.elf: $(OBJS) $(USER_OBJS) /Users/bartlomiejgasyna/STM32CubeIDE/workspace_1.7.0/SM_LAB_PROJECT/STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SM_LAB_PROJECT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/Users/bartlomiejgasyna/STM32CubeIDE/workspace_1.7.0/SM_LAB_PROJECT/STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SM_LAB_PROJECT.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
