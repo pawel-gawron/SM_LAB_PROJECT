@@ -28,6 +28,12 @@
 
 
 /* Public function prototypes ------------------------------------------------*/
+
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_init(struct lcd_disp * lcd)
 {
 	uint8_t xpin = 0;
@@ -56,6 +62,13 @@ void lcd_init(struct lcd_disp * lcd)
 
 }
 
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @param[in] kp_init Proportional value
+ * @param[in] ki_init Integral value
+ * @return None
+ */
 void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin)
 {
 	uint8_t tx_data[4];
@@ -72,6 +85,11 @@ void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin)
 	HAL_Delay(5);
 }
 
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_display(struct lcd_disp * lcd)
 {
 	uint8_t xpin = 0, i = 0;
@@ -102,6 +120,11 @@ void lcd_display(struct lcd_disp * lcd)
 	}
 }
 
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_clear(struct lcd_disp * lcd)
 {
 	uint8_t xpin = 0;

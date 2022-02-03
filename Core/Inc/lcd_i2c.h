@@ -64,9 +64,35 @@ struct lcd_disp {
 };
 
 /* Public function prototypes ------------------------------------------------*/
+
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_init(struct lcd_disp * lcd);
+
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @param[in] kp_init Proportional value
+ * @param[in] ki_init Integral value
+ * @return None
+ */
 void lcd_write(uint8_t addr, uint8_t data, uint8_t xpin);
+
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_display(struct lcd_disp * lcd);
+
+/**
+ * @brief Initialisation PID controller
+ * @param[in] pid_data PID handler
+ * @return None
+ */
 void lcd_clear(struct lcd_disp * lcd);
 
 #endif /* INC_LCD_I2C_H_ */
