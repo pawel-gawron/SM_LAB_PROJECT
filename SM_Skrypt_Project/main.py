@@ -12,14 +12,16 @@ from serial import Serial
 '''variables'''
 data = np.array([])
 cond = True
+
+
 '''plot data'''
 
 
 def plot_data():
-    global cond, data
+    global cond, data, current_value
     if(cond == True):
 
-        # s = serial.Serial(port='COM7', baudrate=9600)
+        # s = serial.Serial("/dev/cu.usbmodem1412203", baudrate = 9600)
 
         # s.write(b'050')
 
@@ -32,7 +34,7 @@ def plot_data():
             a_int = [float(x[-5:]) for x in a[:-3].split(',')]
             print(a)
             print(a_int)
-
+            current_value = a_int
             if(len(a_int) == 3):
                 if(len(data) < 100):
                     data = np.append(data, a_int[1])
@@ -45,6 +47,16 @@ def plot_data():
                 lines.set_ydata(data)
 
                 canvas.draw()
+
+                T = tk.Text(root, height = 8, width = 24)
+                T.pack()
+                T.insert(tk.END, f'Wartość zadana: {int(a_int[2])}\n'
+                                 f'Prędkość: {a_int[1]}\n'
+                                 f'Wypełnienie: {a_int[0]/10}%\n'
+                                 f'Błąd bezwzględny= {round(a_int[2]-a_int[1], 2)}\n'
+                                 f'Błąd względny = {round(((a_int[2]-a_int[1])/a_int[2])*100, 2)}%')
+                T.place(x = 640, y = 250)
+
         except:
             print('error')
         # s.reset_input_buffer()
@@ -61,7 +73,7 @@ def plot_start():
 def plot_stop():
     global cond
     cond = False
-    # print('STOP PRESSED, ', 'cond = ', cond)
+    print('STOP PRESSED, ', 'cond = ', cond)
 '''main GUI code'''
 root = tk.Tk()
 root.title('Real time plot')
@@ -100,11 +112,11 @@ stop.place(x=400, y = 450)
 
 '''Serial port'''
 # global s
-s = serial.Serial(port='COM7', baudrate = 9600)
+s = serial.Serial("/dev/cu.usbmodem1412203", baudrate=9600)
 # s.reset_input_buffer()
 # s.write(b'050')
 
-'''value button'''
+'''Setpoint button'''
 def entry_command():
     text = entry.get()
     # print(text)
@@ -112,8 +124,10 @@ def entry_command():
         s.write(str(text).encode())
     return None
 
+
+
 entry = tk.Entry(root, width=3, borderwidth=2)
-entry.pack
+entry.pack()
 entry.insert(0, 'set')
 entry.place(x = 600, y = 450)
 

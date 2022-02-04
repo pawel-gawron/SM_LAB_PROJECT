@@ -4,7 +4,8 @@ import time
 
 
 value = 1
-s = serial.Serial(port='COM7', baudrate = 9600)
+print('start')
+s = serial.Serial("/dev/cu.usbmodem1412203", baudrate=9600)
 # s.write(b'075')
 setpoint = '095'
 s.write(setpoint.encode())
