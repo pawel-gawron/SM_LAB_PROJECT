@@ -5,7 +5,8 @@ from matplotlib.figure import Figure
 import tkinter as tk
 import numpy as np
 import serial
-import time
+from PIL import Image, ImageTk
+
 
 from serial import Serial
 
@@ -108,6 +109,18 @@ root.update()
 stop = tk.Button(root, text = 'Stop', font = ('calibri', 12), command = lambda: plot_stop())
 stop.place(x=400, y = 450)
 
+
+'''Logo'''
+image = Image.open('Logo_PP.png')
+img = image.resize((240, 240))
+my_img = ImageTk.PhotoImage(img)
+label_img = tk.Label(root, image=my_img)
+# label_img.pack(side=tk.TOP, anchor = tk.NE)
+label_img.place(x=610, y=10)
+# l1.pack(side=TOP, anchor=NW)
+# photo = tk.PhotoImage(file = r"Logo_pp.png")
+# photo.width(10)
+# tk.Button(root, text = 'Click Me !', image = photo).pack(side = tk.TOP)
 
 
 '''Serial port'''
